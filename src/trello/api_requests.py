@@ -1,10 +1,10 @@
 import requests
 
-from trello.settings import trello_credentials, board
+from settings import trello_credentials, board
 
 
 def get_cards():
-    url = "https://api.trello.com/1/boards/{board_id}/cards?fields=labels,idList,name&key={key}&token={token}" \
+    url = "https://api.trello.com/1/boards/{board_id}/cards/all?fields=labels,idList,name,badges,closed&key={key}&token={token}" \
         .format(board_id=board['id'],
                 key=trello_credentials['key'],
                 token=trello_credentials['token']

@@ -48,12 +48,14 @@ def store_records(records: List[LabelRecord]):
         create_labels_table(db)
     cursor = db.cursor()
 
-    sql = """INSERT INTO labels (timestamp, label_id, label_name, card_id, card_name, list_id, list_name) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+    sql = """INSERT INTO labels (timestamp, label_id, label_name, card_id, card_name, list_id, list_name, closed, progress) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     for index, record in enumerate(records):
+
         if index % 10 == 0:
             print("{} from {}...".format(index, len(records)))
+
         cursor.execute(sql, (record.timestamp if record.timestamp else datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                              record.label_id, record.label_name, record.card_id, record.card_name, record.list_id,
-                             record.list_name))
+                             record.list_name, record.closed, record.progress))
     db.commit()
