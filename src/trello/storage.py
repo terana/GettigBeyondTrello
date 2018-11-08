@@ -13,7 +13,8 @@ def connect():
         port=mysql_credentials['port'],
         user=mysql_credentials['user'],
         password=mysql_credentials['password'],
-        database=mysql_credentials['database'])
+        database=mysql_credentials['database'],
+        auth_plugin='mysql_native_password')
 
 
 def table_exists(db, name: str):
@@ -27,15 +28,17 @@ def table_exists(db, name: str):
 
 def create_labels_table(db):
     cursor = db.cursor()
-    sql = """CREATE TABLE `labels` (
+    sql = """CREATE TABLE `tickets` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `timestamp` timestamp NULL DEFAULT NULL,
   `label_id` varchar(30) NOT NULL DEFAULT '',
-  `lablel_name` varchar(30) DEFAULT NULL,
+  `label_name` varchar(30) DEFAULT NULL,
   `card_id` varchar(30) NOT NULL DEFAULT '',
-  `card_name` varchar(30) DEFAULT NULL,
+  `card_name` varchar(255) DEFAULT NULL,
   `list_id` varchar(30) NOT NULL DEFAULT '',
   `list_name` varchar(30) DEFAULT NULL,
+  `closed` tinyint(1) NOT NULL DEFAULT 0,
+  `progress` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )"""
     cursor.execute(sql)
@@ -44,11 +47,11 @@ def create_labels_table(db):
 
 def store_records(records: List[LabelRecord]):
     db = connect()
-    if not table_exists(db, "labels"):
+    if not table_exists(db, "tickets"):
         create_labels_table(db)
     cursor = db.cursor()
 
-    sql = """INSERT INTO labels (timestamp, label_id, label_name, card_id, card_name, list_id, list_name, closed, progress) 
+    sql = """INSERT INTO tickets (timestamp, label_id, label_name, card_id, card_name, list_id, list_name, closed, progress) 
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     for index, record in enumerate(records):
 
