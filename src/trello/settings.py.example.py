@@ -3,7 +3,7 @@ trello_credentials = {
     'token': ""
 }
 
-board = {"id": ""}
+board = {"id": ""}  # The board id can be found in Trello URL
 
 mysql_credentials = {"host": "",
                      "port": "",
