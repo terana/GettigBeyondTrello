@@ -42,7 +42,7 @@ def add_today_to_checklist(cards_file: str, checked=True) -> None:
     all_cards = get_cards()
 
     with open(cards_file) as f:
-        card_names = [card for card in f]
+        card_names = [card[:-1] for card in f]
     today = datetime.date.today()
 
     for card in all_cards:
