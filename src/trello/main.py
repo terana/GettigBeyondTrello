@@ -38,19 +38,32 @@ def store_cards() -> None:
     print("Done.")
 
 
-def add_today_to_checklist(cards_file: str, checked=True) -> None:
+def add_checkitems(cards_file: str, checkitems: List, checked=False) -> None:
     all_cards = get_cards()
 
     with open(cards_file) as f:
         card_names = [card[:-1] for card in f]
-    today = datetime.date.today()
 
     for card in all_cards:
         if card['name'] in card_names:
             for checklist_id in card['idChecklists']:
                 add_to_checklist(checklist_id=checklist_id,
-                                 checkitems=[today.strftime('%a, %d  %b %Y')],
+                                 checkitems=checkitems,
                                  checked=checked)
+
+
+def add_today_to_checklist(cards_file: str, checked=True) -> None:
+    today = datetime.date.today()
+    add_checkitems(cards_file=cards_file,
+                   checkitems=[today.strftime('%a, %d  %b %Y')],
+                   checked=checked)
+
+
+def add_week_to_checklist(cards_file: str) -> None:
+    today = datetime.date.today()
+    checkitems = [day.strftime('%a, %d  %b %Y') for day in (today + datetime.timedelta(days=n) for n in range(7))]
+    add_checkitems(cards_file=cards_file,
+                   checkitems=checkitems)
 
 
 def process_checkitem_options(argv: List):
@@ -84,3 +97,5 @@ if __name__ == "__main__":
         item, check = process_checkitem_options(argv=sys.argv[2:])
         if item == 'today':
             add_today_to_checklist(cards_file="days_checklist_cards.txt", checked=check)
+        elif item == 'week':
+            add_week_to_checklist(cards_file="days_checklist_cards.txt")
