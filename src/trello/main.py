@@ -2,8 +2,8 @@ from api_requests import get_cards, get_list, add_to_checklist
 from models import LabelRecord
 from storage import store_records
 from typing import List
+from formatted_dates import today, whole_next_week, current_week
 
-import datetime
 import sys
 import getopt
 
@@ -52,25 +52,11 @@ def add_checkitems(cards_file: str, checkitems: List, checked=False) -> None:
                                  checked=checked)
 
 
-def add_today_to_checklist(cards_file: str, checked=True) -> None:
-    today = datetime.date.today()
-    add_checkitems(cards_file=cards_file,
-                   checkitems=[today.strftime('%a, %d  %b %Y')],
-                   checked=checked)
-
-
-def add_week_to_checklist(cards_file: str) -> None:
-    today = datetime.date.today()
-    checkitems = [day.strftime('%a, %d  %b %Y') for day in (today + datetime.timedelta(days=n) for n in range(7))]
-    add_checkitems(cards_file=cards_file,
-                   checkitems=checkitems)
-
-
 def process_checkitem_options(argv: List):
     try:
         opts, args = getopt.getopt(argv, "i:c", ["item="])
     except getopt.GetoptError:
-        print(f'Usage: {sys.argv[0]} add-checkitem -i <week | today> [-c]')
+        print(f'Usage: {sys.argv[0]} add-checkitem -i <week | today | whole-week> [-c]')
         sys.exit(2)
     check = False
     item = None
@@ -79,8 +65,8 @@ def process_checkitem_options(argv: List):
             item = arg
         elif opt == "-c":
             check = True
-    if item != 'today' and item != 'week':
-        print(f'Usage: {sys.argv[0]} add-checkitem -i <week | today> [-c]')
+    if item != 'today' and item != 'week' and item != "whole-week":
+        print(f'Usage: {sys.argv[0]} add-checkitem -i <week | today | whole-week> [-c]')
         sys.exit(2)
 
     return item, check
@@ -88,7 +74,7 @@ def process_checkitem_options(argv: List):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} [store | add-checkitem -i <week | today> [-c]]")
+        print(f"Usage: {sys.argv[0]} [store | add-checkitem -i <week | today | whole-week> [-c]]")
         sys.exit(2)
     command = sys.argv[1]
     if command == 'store':
@@ -96,6 +82,12 @@ if __name__ == "__main__":
     elif command == 'add-checkitem':
         item, check = process_checkitem_options(argv=sys.argv[2:])
         if item == 'today':
-            add_today_to_checklist(cards_file="days_checklist_cards.txt", checked=check)
+            add_checkitems(cards_file="daily_checked_cards.txt",
+                           checkitems=[today()],
+                           checked=check)
+        elif item == 'next-week':
+            add_checkitems(cards_file="daily_checked_cards.txt",
+                           checkitems=whole_next_week())
         elif item == 'week':
-            add_week_to_checklist(cards_file="days_checklist_cards.txt")
+            add_checkitems(cards_file="weekly_checked_cards.txt",
+                           checkitems=[current_week()])

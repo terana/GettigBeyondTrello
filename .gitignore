@@ -1,6 +1,6 @@
 # Sensitive files
 *settings.py
-days_checklist_cards.txt
+*.txt
 
 # Python stuff
 __pycache__*
