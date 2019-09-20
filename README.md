@@ -1,22 +1,20 @@
-# GettigBeyondTrello
+# Gettig Beyond Trello
 
-*Do you like analytics, metrics and dashboards as much as I do?
-Not sure if it is possible.*
+*Do you like analytics, metrics and dashboards as much as I do?*
 
-So this is my personal tool for retrieving data from Trello boards and performing some actions on cards.\
+This is my personal tool for retrieving data from Trello boards and performing some analytics on cards.\
 Why?\
-Because I use Trello a lot and build custom dashboards from this data. 
+Because I use Trello a lot and build custom dashboards from my stats. 
 
 ## Usage
-Just run this python script like this for storing board snapshot in MySQL database:
+Storing board snapshot in MySQL database:
 ```bash
 python main.py store
 ```
 
-Or like this to add today as a checkitem to cards listed in days_checklist_cards.txt:
+Add today as a checkitem to cards listed in days_checklist_cards.txt:
 ```bash
 python main.py add-checkitem -i today -c
 ```
 
-That's it.\
-The tool is for personal use, so I will add some functionality when I need it.
+To be continued...
